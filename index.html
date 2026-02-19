@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aram Najarian — Engineering Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #ffffff;
+      --bg-alt:     #f6f6f5;
+      --text:       #1a1a1a;
+      --text-muted: #6b6b6b;
+      --border:     #e4e4e0;
+      --accent:     #1a1a1a;
+      --accent-hover: #444;
+      --nav-h:      72px;
+      --max-w:      1280px;
+      --gutter:     clamp(24px, 4vw, 80px);
+      --radius:     4px;
+      --transition: 0.25s ease;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+
+    /* ── Page sections (SPA routing) ─────────────────────────── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── NAV ────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--gutter);
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+
+    .nav-brand {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text);
+    }
+
+    /* Hamburger */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      transition: transform var(--transition), opacity var(--transition);
+    }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile nav drawer */
+    .nav-drawer {
+      display: none;
+      position: fixed;
+      top: var(--nav-h);
+      left: 0; right: 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 24px var(--gutter);
+      z-index: 99;
+    }
+    .nav-drawer.open { display: flex; flex-direction: column; gap: 20px; }
+    .nav-drawer a {
+      font-size: 0.9375rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .nav-drawer a:hover,
+    .nav-drawer a.active { color: var(--text); }
+
+    /* ── Shared layout helpers ──────────────────────────────── */
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+
+    section { padding: 96px 0; }
+
+    .section-label {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ── HOME PAGE ──────────────────────────────────────────── */
+
+    /* Hero */
+    #home {
+      padding-top: 0;
+    }
+
+    .hero {
+      min-height: 100svh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: calc(var(--nav-h) + 80px) var(--gutter) 80px;
+      padding-left: var(--gutter);
+      max-width: 640px;
+      margin-left: auto;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .hero-heading {
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 28px;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 1.5vw, 1.1875rem);
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 420px;
+      margin-bottom: 48px;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1.5px solid var(--text);
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+      border-radius: var(--radius);
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+    }
+    .btn-secondary:hover {
+      background: var(--text);
+      color: #fff;
+    }
+
+    .hero-image {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-alt);
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    /* Hero placeholder illustration */
+    .hero-placeholder {
+      width: 100%;
+      height: 100%;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #f0f0ef 0%, #e8e8e6 100%);
+    }
+
+    .hero-placeholder svg {
+      width: 64px;
+      height: 64px;
+      opacity: 0.2;
+    }
+
+    /* Featured projects strip on home */
+    .home-projects {
+      background: var(--bg-alt);
+      padding: 80px 0;
+    }
+
+    .home-projects .container > .section-label {
+      margin-bottom: 48px;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .project-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-alt);
+      cursor: pointer;
+      aspect-ratio: 4/3;
+    }
+
+    .project-card:hover .project-card-overlay {
+      opacity: 1;
+    }
+
+    .project-card:hover .project-card-img {
+      transform: scale(1.04);
+    }
+
+    .project-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .project-card-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #e9e9e7 0%, #d8d8d5 100%);
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: rgba(0,0,0,0.08);
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+    }
+
+    .project-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.62);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 28px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .project-card-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+
+    .project-card-tag {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* Always-visible project title below card */
+    .project-card-footer {
+      padding: 20px 0 0;
+    }
+    .project-card-footer-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .project-card-footer-sub {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .project-card-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Contact strip */
+    .contact-strip {
+      border-top: 1px solid var(--border);
+      padding: 64px 0;
+    }
+
+    .contact-strip .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 32px;
+    }
+
+    .contact-info-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .contact-info-group h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .contact-details {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+    }
+
+    .contact-item svg {
+      flex-shrink: 0;
+      opacity: 0.5;
+    }
+
+    /* ── PORTFOLIO PAGE ──────────────────────────────────────── */
+    .portfolio-header {
+      padding: calc(var(--nav-h) + 64px) 0 56px;
+    }
+
+    .portfolio-projects {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 80px;
+      padding-bottom: 96px;
+    }
+
+    .portfolio-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .portfolio-item:nth-child(even) .portfolio-item-image {
+      order: 2;
+    }
+    .portfolio-item:nth-child(even) .portfolio-item-text {
+      order: 1;
+    }
+
+    .portfolio-item-image {
+      border-radius: var(--radius);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: var(--bg-alt);
+    }
+
+    .portfolio-item-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .portfolio-img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #ededeb 0%, #e0e0dd 100%);
+    }
+
+    .portfolio-item-label {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .portfolio-item-title {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .portfolio-item-desc {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--text-muted);
+    }
+
+    /* ── RESUME PAGE ─────────────────────────────────────────── */
+    .resume-header {
+      padding: calc(var(--nav-h) + 64px) 0 56px;
+    }
+
+    .resume-download-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 28px 36px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 64px;
+    }
+
+    .resume-download-bar p {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+    }
+
+    .resume-body {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 64px;
+      padding-bottom: 96px;
+    }
+
+    .resume-section {
+      margin-bottom: 56px;
+    }
+
+    .resume-section-title {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 32px;
+    }
+
+    .resume-entry {
+      margin-bottom: 36px;
+    }
+
+    .resume-entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .resume-entry-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .resume-entry-date {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .resume-entry-org {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .resume-entry ul {
+      list-style: disc;
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .resume-entry li {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .skill-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .skill-category {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .skill-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-item {
+      padding: 5px 12px;
+      font-size: 0.8125rem;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text-muted);
+    }
+
+    .resume-note {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.6;
+      padding: 20px 24px;
+      border-left: 2px solid var(--border);
+      background: var(--bg-alt);
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+
+    /* ── BACKGROUND PAGE ─────────────────────────────────────── */
+    .bg-header {
+      padding: calc(var(--nav-h) + 64px) 0 56px;
+    }
+
+    .bg-quote {
+      max-width: 720px;
+      margin: 0 auto 80px;
+      text-align: center;
+      padding: 0 var(--gutter);
+    }
+
+    .bg-quote blockquote {
+      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .bg-quote cite {
+      font-size: 0.875rem;
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .bg-sections {
+      padding-bottom: 96px;
+    }
+
+    .bg-section {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 48px;
+      padding: 56px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .bg-section:last-child {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .bg-section-heading {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .bg-section-body {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+    }
+
+    .bg-section-body p + p {
+      margin-top: 16px;
+    }
+
+    .bg-involvement-list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .bg-involvement-item h4 {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .bg-involvement-item p {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      background: var(--text);
+      color: #fff;
+      padding: 56px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+
+    .footer-brand {
+      font-size: 1.125rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+
+    .footer-tagline {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.6);
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover { color: #fff; }
+
+    .footer-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-contact-item {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.6);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.12);
+      margin-top: 48px;
+      padding-top: 24px;
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      :root { --nav-h: 64px; }
+
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-text {
+        padding: calc(var(--nav-h) + 56px) var(--gutter) 56px;
+        max-width: 100%;
+        margin: 0;
+      }
+
+      .hero-image {
+        display: none;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+
+      .project-card-overlay {
+        opacity: 1;
+        background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+      }
+
+      .portfolio-item {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .portfolio-item:nth-child(even) .portfolio-item-image,
+      .portfolio-item:nth-child(even) .portfolio-item-text {
+        order: unset;
+      }
+
+      .resume-body {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .bg-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+      }
+
+      .contact-details {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      section { padding: 64px 0; }
+
+      .hero-heading {
+        font-size: 2.6rem;
+      }
+
+      .contact-strip .container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .resume-download-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 24px;
+      }
+
+      .bg-quote {
+        margin-bottom: 48px;
+      }
+    }
+
+    /* ── Scroll top ──────────────────────────────────────────── */
+    #back-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 44px;
+      height: 44px;
+      border: 1.5px solid var(--border);
+      border-radius: 50%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition), background var(--transition);
+      z-index: 50;
+    }
+    #back-top.show { opacity: 1; pointer-events: auto; }
+    #back-top:hover { background: var(--text); }
+    #back-top:hover svg { stroke: #fff; }
+    #back-top svg { stroke: var(--text); }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ───────────────────────────────────────────────── -->
+  <nav>
+    <a class="nav-brand" href="#" onclick="showPage('home')">Aram Najarian</a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
+      <li><a href="#" class="nav-link" data-page="portfolio">Portfolio</a></li>
+      <li><a href="#" class="nav-link" data-page="resume">Resume</a></li>
+      <li><a href="#" class="nav-link" data-page="background">Background &amp; Motivation</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile drawer -->
+  <div class="nav-drawer" id="nav-drawer">
+    <a href="#" class="nav-link" data-page="home">Home</a>
+    <a href="#" class="nav-link" data-page="portfolio">Portfolio</a>
+    <a href="#" class="nav-link" data-page="resume">Resume</a>
+    <a href="#" class="nav-link" data-page="background">Background &amp; Motivation</a>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- HOME PAGE                                              -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="page active" id="page-home">
+
+    <!-- Hero -->
+    <section id="home" style="padding:0">
+      <div class="hero">
+        <div class="hero-text">
+          <p class="hero-eyebrow">Engineering Portfolio</p>
+          <h1 class="hero-heading">HI, I'M<br>ARAM<br>NAJARIAN</h1>
+          <p class="hero-sub">
+            I am a third-year mechanical engineering student at Northeastern
+            with hands-on experience in product development and rapid prototyping.
+          </p>
+          <div class="hero-cta-group">
+            <a class="btn btn-primary" href="#" onclick="showPage('portfolio')">View Projects</a>
+            <a class="btn btn-secondary" href="#" onclick="showPage('resume')">Resume</a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <div class="hero-placeholder">
+            <!-- Replace with <img src="images/hero.jpg" alt="Aram Najarian"> once image is added -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Projects -->
+    <div class="home-projects">
+      <div class="container">
+        <p class="section-label">Featured Work</p>
+        <div class="projects-grid">
+
+          <div class="project-card-wrap">
+            <div class="project-card" onclick="showPage('portfolio')">
+              <div class="project-card-placeholder">MĪRA</div>
+              <div class="project-card-overlay">
+                <p class="project-card-title">MĪRA</p>
+                <p class="project-card-tag">Product Development</p>
+              </div>
+            </div>
+            <div class="project-card-footer">
+              <p class="project-card-footer-title">MĪRA</p>
+              <p class="project-card-footer-sub">Product Development</p>
+            </div>
+          </div>
+
+          <div class="project-card-wrap">
+            <div class="project-card" onclick="showPage('portfolio')">
+              <div class="project-card-placeholder">DrumStar</div>
+              <div class="project-card-overlay">
+                <p class="project-card-title">DrumStar Kit 1</p>
+                <p class="project-card-tag">Rapid Prototyping</p>
+              </div>
+            </div>
+            <div class="project-card-footer">
+              <p class="project-card-footer-title">DrumStar Kit 1</p>
+              <p class="project-card-footer-sub">Rapid Prototyping</p>
+            </div>
+          </div>
+
+          <div class="project-card-wrap">
+            <div class="project-card" onclick="showPage('portfolio')">
+              <div class="project-card-placeholder">River Gauge</div>
+              <div class="project-card-overlay">
+                <p class="project-card-title">River Gauge</p>
+                <p class="project-card-tag">Engineering Design</p>
+              </div>
+            </div>
+            <div class="project-card-footer">
+              <p class="project-card-footer-title">River Gauge</p>
+              <p class="project-card-footer-sub">Engineering Design</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact strip -->
+    <div class="contact-strip">
+      <div class="container">
+        <div class="contact-info-group">
+          <h3>Get in Touch</h3>
+          <div class="contact-details">
+            <span class="contact-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href="mailto:najarian.ar@northeastern.edu">najarian.ar@northeastern.edu</a>
+            </span>
+            <span class="contact-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.34 13.5a19.79 19.79 0 01-3.07-8.67A2 2 0 013.46 2.5h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.91 10a16 16 0 006.29 6.29l1.59-1.59a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7a2 2 0 011.72 2z"/></svg>
+              <a href="tel:7039093345">(703) 909-3345</a>
+            </span>
+            <span class="contact-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              360 Huntington Ave, Boston, MA 02115
+            </span>
+          </div>
+        </div>
+        <a class="btn btn-primary" href="mailto:najarian.ar@northeastern.edu">Say Hello</a>
+      </div>
+    </div>
+
+  </div><!-- /page-home -->
+
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- PORTFOLIO PAGE                                         -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="page" id="page-portfolio">
+
+    <div class="portfolio-header container">
+      <p class="section-label">Work</p>
+      <h1 class="section-title">Portfolio</h1>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="container">
+      <div class="portfolio-projects">
+
+        <!-- Project 1: MĪRA -->
+        <div class="portfolio-item">
+          <div class="portfolio-item-image">
+            <!-- Replace with: <img src="images/mira.png" alt="MĪRA project"> -->
+            <div class="portfolio-img-placeholder" style="min-height:320px;">
+              <span style="font-size:3rem;font-weight:900;color:rgba(0,0,0,0.1);letter-spacing:-0.04em;">MĪRA</span>
+            </div>
+          </div>
+          <div class="portfolio-item-text">
+            <p class="portfolio-item-label">Project 01</p>
+            <h2 class="portfolio-item-title">MĪRA</h2>
+            <p class="portfolio-item-desc">
+              <!-- Add project description here -->
+              A product development project focused on innovative design and engineering solutions.
+              Built with hands-on prototyping and iterative design methodology.
+            </p>
+            <div class="tag-list">
+              <span class="tag">Product Design</span>
+              <span class="tag">Prototyping</span>
+              <span class="tag">CAD</span>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- Project 2: DrumStar Kit 1 -->
+        <div class="portfolio-item">
+          <div class="portfolio-item-image">
+            <!-- Replace with: <img src="images/drumstar.png" alt="DrumStar Kit 1"> -->
+            <div class="portfolio-img-placeholder" style="min-height:320px;">
+              <span style="font-size:1.8rem;font-weight:900;color:rgba(0,0,0,0.1);letter-spacing:-0.03em;">DrumStar Kit 1</span>
+            </div>
+          </div>
+          <div class="portfolio-item-text">
+            <p class="portfolio-item-label">Project 02</p>
+            <h2 class="portfolio-item-title">DrumStar Kit 1</h2>
+            <p class="portfolio-item-desc">
+              <!-- Add project description here -->
+              A rapid prototyping project combining mechanical engineering with creative design.
+              Developed using industry-standard fabrication techniques.
+            </p>
+            <div class="tag-list">
+              <span class="tag">Rapid Prototyping</span>
+              <span class="tag">Mechanical Design</span>
+              <span class="tag">Fabrication</span>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- Project 3: River Gauge -->
+        <div class="portfolio-item">
+          <div class="portfolio-item-image">
+            <!-- Replace with: <img src="images/river-gauge.png" alt="River Gauge"> -->
+            <div class="portfolio-img-placeholder" style="min-height:320px;">
+              <span style="font-size:2rem;font-weight:900;color:rgba(0,0,0,0.1);letter-spacing:-0.03em;">River Gauge</span>
+            </div>
+          </div>
+          <div class="portfolio-item-text">
+            <p class="portfolio-item-label">Project 03</p>
+            <h2 class="portfolio-item-title">River Gauge</h2>
+            <p class="portfolio-item-desc">
+              <!-- Add project description here -->
+              An engineering design project aimed at accurate environmental measurement.
+              Integrates sensing technology with robust mechanical construction.
+            </p>
+            <div class="tag-list">
+              <span class="tag">Engineering Design</span>
+              <span class="tag">Sensing</span>
+              <span class="tag">Systems</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /page-portfolio -->
+
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- RESUME PAGE                                            -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="page" id="page-resume">
+
+    <div class="resume-header container">
+      <p class="section-label">Career</p>
+      <h1 class="section-title">Resume</h1>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="container" style="padding-top:56px;">
+
+      <!-- Download bar -->
+      <div class="resume-download-bar">
+        <div>
+          <strong>Aram Najarian — Resume</strong>
+          <p>Full PDF version available for download.</p>
+        </div>
+        <!-- Replace href with the actual path to your resume PDF -->
+        <a class="btn btn-primary" href="Aram_Najarian_Resume.pdf" target="_blank" download>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </a>
+      </div>
+
+      <div class="resume-body">
+
+        <!-- Left column: experience & education -->
+        <div>
+
+          <div class="resume-section">
+            <p class="resume-section-title">Education</p>
+            <div class="resume-entry">
+              <div class="resume-entry-header">
+                <span class="resume-entry-title">Northeastern University</span>
+                <span class="resume-entry-date">Expected May 2027</span>
+              </div>
+              <p class="resume-entry-org">Bachelor of Science in Mechanical Engineering · Boston, MA</p>
+              <ul>
+                <li>Hands-on experience in product development and rapid prototyping</li>
+                <li>Active involvement in engineering design projects</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="resume-section">
+            <p class="resume-section-title">Experience</p>
+            <p class="resume-note">
+              The full resume PDF contains complete work history, co-op experience, and project details.
+              Download the PDF above or reach out at
+              <a href="mailto:najarian.ar@northeastern.edu" style="color:var(--text);text-decoration:underline;">najarian.ar@northeastern.edu</a>
+              for more information.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Right column: skills -->
+        <div>
+          <div class="resume-section">
+            <p class="resume-section-title">Skills &amp; Tools</p>
+            <div class="skill-grid">
+              <div>
+                <p class="skill-category">Engineering</p>
+                <div class="skill-items">
+                  <span class="skill-item">CAD / SolidWorks</span>
+                  <span class="skill-item">Rapid Prototyping</span>
+                  <span class="skill-item">Product Development</span>
+                  <span class="skill-item">3D Printing</span>
+                  <span class="skill-item">Machining</span>
+                </div>
+              </div>
+              <div>
+                <p class="skill-category">Software</p>
+                <div class="skill-items">
+                  <span class="skill-item">MATLAB</span>
+                  <span class="skill-item">Python</span>
+                  <span class="skill-item">AutoCAD</span>
+                  <span class="skill-item">ANSYS</span>
+                </div>
+              </div>
+              <div>
+                <p class="skill-category">Other</p>
+                <div class="skill-items">
+                  <span class="skill-item">Technical Writing</span>
+                  <span class="skill-item">Project Management</span>
+                  <span class="skill-item">Team Leadership</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="resume-section">
+            <p class="resume-section-title">Contact</p>
+            <div class="skill-grid" style="gap:10px;">
+              <a href="mailto:najarian.ar@northeastern.edu" style="font-size:0.875rem;color:var(--text-muted);">najarian.ar@northeastern.edu</a>
+              <a href="tel:7039093345" style="font-size:0.875rem;color:var(--text-muted);">(703) 909-3345</a>
+              <span style="font-size:0.875rem;color:var(--text-muted);">360 Huntington Ave, Boston, MA 02115</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /page-resume -->
+
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- BACKGROUND & MOTIVATION PAGE                           -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="page" id="page-background">
+
+    <div class="bg-header container">
+      <p class="section-label">About</p>
+      <h1 class="section-title">Background &amp;<br>Motivation</h1>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Quote -->
+    <div class="bg-quote" style="margin-top:72px;">
+      <blockquote>
+        "If you laugh, you think, and you cry, that's a full day. You do that seven
+        days a week, you're going to have something special."
+      </blockquote>
+      <cite>— Jimmy V</cite>
+    </div>
+
+    <div class="container">
+      <div class="bg-sections">
+
+        <!-- Community & Identity -->
+        <div class="bg-section">
+          <div>
+            <h2 class="bg-section-heading">Community &amp; Identity</h2>
+          </div>
+          <div class="bg-section-body">
+            <p>
+              Aram's Armenian identity has been shaped through active involvement, leadership,
+              and long-term commitment to community engagement.
+            </p>
+            <div class="bg-involvement-list" style="margin-top:28px;">
+              <div class="bg-involvement-item">
+                <h4>Junior Seminar Committee — Chair</h4>
+                <p>
+                  Educated the next generation of Armenian youth while empowering young adults
+                  through counseling and mentorship.
+                </p>
+              </div>
+              <div class="bg-involvement-item">
+                <h4>AYF Internship</h4>
+                <p>
+                  Selected for a competitive Armenian Youth Federation internship, spending a
+                  summer in Armenia to deepen connection to heritage through hands-on community
+                  engagement.
+                </p>
+              </div>
+              <div class="bg-involvement-item">
+                <h4>Camp Haiastan Staff</h4>
+                <p>
+                  Returned as counselor to the camp attended for over a decade, continuing a
+                  family tradition of service and mentorship.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Go for O -->
+        <div class="bg-section">
+          <div>
+            <h2 class="bg-section-heading">Go for O</h2>
+          </div>
+          <div class="bg-section-body">
+            <p>
+              When a close friend received a cancer diagnosis, a fundraising team formed in his
+              honor. As team captain, Aram coordinated logistics for 8 runners supporting Dana
+              Farber Cancer Institute's half-marathon.
+            </p>
+            <p>
+              The team raised <strong>$50,000</strong> for cancer research — the top fundraising
+              group — and cut the ribbon for the race's opening heat. The friend has since
+              achieved remission and returned to school.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /page-background -->
+
+
+  <!-- ── FOOTER ─────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <p class="footer-brand">Aram Najarian</p>
+          <p class="footer-tagline">Mechanical Engineering Student · Northeastern University</p>
+        </div>
+        <nav class="footer-links">
+          <a href="#" onclick="showPage('home')">Home</a>
+          <a href="#" onclick="showPage('portfolio')">Portfolio</a>
+          <a href="#" onclick="showPage('resume')">Resume</a>
+          <a href="#" onclick="showPage('background')">Background &amp; Motivation</a>
+        </nav>
+        <div class="footer-contact">
+          <span class="footer-contact-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:najarian.ar@northeastern.edu">najarian.ar@northeastern.edu</a>
+          </span>
+          <span class="footer-contact-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.34 13.5a19.79 19.79 0 01-3.07-8.67A2 2 0 013.46 2.5h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.91 10a16 16 0 006.29 6.29l1.59-1.59a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7a2 2 0 011.72 2z"/></svg>
+            <a href="tel:7039093345">(703) 909-3345</a>
+          </span>
+          <span class="footer-contact-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            360 Huntington Ave, Boston, MA 02115
+          </span>
+        </div>
+      </div>
+      <p class="footer-bottom">© 2026 Aram Najarian. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <button id="back-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+  </button>
+
+
+  <script>
+    /* ── SPA routing ─────────────────────────────────────────── */
+    const pages = ['home', 'portfolio', 'resume', 'background'];
+
+    function showPage(id) {
+      // Hide all
+      pages.forEach(p => {
+        const el = document.getElementById('page-' + p);
+        if (el) el.classList.remove('active');
+      });
+
+      // Show target
+      const target = document.getElementById('page-' + id);
+      if (target) target.classList.add('active');
+
+      // Update nav active states
+      document.querySelectorAll('.nav-link').forEach(a => {
+        a.classList.toggle('active', a.dataset.page === id);
+      });
+
+      // Close mobile drawer
+      document.getElementById('nav-drawer').classList.remove('open');
+      document.getElementById('nav-toggle').classList.remove('open');
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      // Update URL hash
+      history.pushState({ page: id }, '', '#' + id);
+    }
+
+    // Bind nav links
+    document.querySelectorAll('.nav-link').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        showPage(a.dataset.page);
+      });
+    });
+
+    // Handle browser back/forward
+    window.addEventListener('popstate', e => {
+      const id = (e.state && e.state.page) || 'home';
+      showPage(id);
+    });
+
+    // Load from hash on page load
+    (function() {
+      const hash = window.location.hash.replace('#', '');
+      if (pages.includes(hash)) showPage(hash);
+      else showPage('home');
+    })();
+
+    /* ── Mobile nav toggle ───────────────────────────────────── */
+    document.getElementById('nav-toggle').addEventListener('click', function() {
+      this.classList.toggle('open');
+      document.getElementById('nav-drawer').classList.toggle('open');
+    });
+
+    /* ── Back to top ─────────────────────────────────────────── */
+    window.addEventListener('scroll', () => {
+      document.getElementById('back-top').classList.toggle('show', window.scrollY > 400);
+    }, { passive: true });
+
+    /* ── Prevent default on all anchor href="#" ──────────────── */
+    document.querySelectorAll('a[href="#"]').forEach(a => {
+      a.addEventListener('click', e => e.preventDefault());
+    });
+  </script>
+</body>
+</html>
